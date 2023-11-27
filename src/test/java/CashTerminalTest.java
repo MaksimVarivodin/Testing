@@ -65,11 +65,25 @@ public class CashTerminalTest {
         assertThrows(CashTerminal.PASSCODE_IS_WRONG_LENGTH.getClass(),()->{terminal.getMoney(1234, 123, 1300);});
     }
     @Test
-    public void badAmount() throws CashTerminalException {
+    public void badAmount1301() throws CashTerminalException {
         terminal = new CashTerminal();
         assertTrue(terminal.putMoney(15, 15));
         assertThrows(CashTerminal.AMOUNT_IS_NOT_DIVISIBLE_BY.getClass(),()->{terminal.getMoney(1234, 1234, 1301);});
     }
+    @Test
+    public void badAmountMinus1301() throws CashTerminalException {
+        terminal = new CashTerminal();
+        assertTrue(terminal.putMoney(15, 15));
+        assertThrows(CashTerminal.REQUESTED_MONEY_AMOUNT_TOO_SMALL.getClass(),()->{terminal.getMoney(1234, 1234, -1301);});
+    }
+    @Test
+    public void badAmountZero() throws CashTerminalException {
+        terminal = new CashTerminal();
+        assertTrue(terminal.putMoney(15, 15));
+        assertThrows(CashTerminal.REQUESTED_MONEY_AMOUNT_TOO_SMALL.getClass(),()->{terminal.getMoney(1234, 1234, 0);});
+    }
+
+
     @Test
     public void tooBigAmount() throws CashTerminalException {
         terminal = new CashTerminal();

@@ -8,7 +8,7 @@ public class CashTerminal {
     public static final CredentialsException CARD_OR_PASSCODE_IS_NULL = new CredentialsException("Card or passcode is null.");
     public static final CredentialsException PASSCODE_IS_WRONG_LENGTH = new CredentialsException("Passcode is wrong length.");
     public static final CredentialsException AMOUNT_IS_NOT_DIVISIBLE_BY = new CredentialsException("Amount is not divisible by " + Math.min(A, B));
-    public static final CashTerminalException REQUESTED_MONEY_AMOUNT_LESS_THAN_ZERO = new CashTerminalException("Money amount less than zero.");
+    public static final CashTerminalException REQUESTED_MONEY_AMOUNT_TOO_SMALL = new CashTerminalException("Money amount is too small.");
     public static final CashTerminalException NOT_ENOUGH_MONEY_IN_CASH_TERMINAL = new CashTerminalException("Not enough money in cash terminal.");
     public static final CashTerminalException CASH_TERMINAL_OVERLOADED = new CashTerminalException("Not enough space in cash terminal.");
 
@@ -42,13 +42,14 @@ public class CashTerminal {
         if (amountOfA * A + amountOfB * B < amount){
             throw NOT_ENOUGH_MONEY_IN_CASH_TERMINAL;
         }
-        if (amount < 0){
-            throw REQUESTED_MONEY_AMOUNT_LESS_THAN_ZERO;
+        if (amount <= 0){
+            throw REQUESTED_MONEY_AMOUNT_TOO_SMALL;
         }
         Integer resultB = amount /  B;
         Integer resultA = (amount - resultB*B )/  A;
 
-        System.out.println("Terminal has banknotes of "+ A + "$ and " + B + "$.\n"+
+        System.out.println(
+                "Terminal has banknotes of "+ A + "$ and " + B + "$.\n"+
                 " You get "  + resultA  + " of " + A + "$ and " + resultB + " of " + B + "$.\n"+
                 "In sum: " + amount + "$.\n"
         );
@@ -57,7 +58,7 @@ public class CashTerminal {
         return true;
     }
     public boolean putMoney(Integer amountOfA, Integer amountOfB) throws CashTerminalException {
-        if (this.amountOfA+ amountOfA > N)
+        if (this.amountOfA + amountOfA > N)
             throw CASH_TERMINAL_OVERLOADED;
         if (this.amountOfB + amountOfB > N)
             throw CASH_TERMINAL_OVERLOADED;
