@@ -1,4 +1,4 @@
-package test.java;
+package
 
 import main.java.DataBaseCalc;
 import org.junit.jupiter.api.Test;
