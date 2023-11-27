@@ -1,6 +1,3 @@
-package
-
-import main.java.DataBaseCalc;
 import org.junit.jupiter.api.Test;
 
 import static java.lang.Double.valueOf;
