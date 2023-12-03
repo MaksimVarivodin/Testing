@@ -1,6 +1,7 @@
-import org.junit.jupiter.api.Test;
+import org.junit.Assert;
+import org.junit.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertTrue;
 
 public class CashTerminalTest {
     ///TO_DO Число банкнот під час заповнення банкомату коректне.
@@ -11,28 +12,24 @@ public class CashTerminalTest {
     /* TO_DO Кількість грошей більша, ніж може видати банкомат. */
     /* TO_DO Кількість грошей є коректною.*/
     CashTerminal terminal;
-    @Test
+    @Test()
     public void normalAB() throws CashTerminalException {
         terminal = new CashTerminal();
         assertTrue(terminal.putMoney(15, 15));
     }
-    @Test
-    public void badA(){
-        assertThrows(CashTerminal.CASH_TERMINAL_OVERLOADED.getClass(), () -> {
-            new CashTerminal(21, 15);
-        });
+    @Test(expected = CashTerminalException.class)
+    public void badA() throws CashTerminalException{
+        terminal =  new CashTerminal(21, 15);
     }
-    @Test
-    public void badB(){
-        assertThrows(CashTerminal.CASH_TERMINAL_OVERLOADED.getClass(), () -> {
+    @Test(expected = CashTerminalException.class)
+    public void badB() throws CashTerminalException{
+        terminal =
             new CashTerminal(15, 21);
-        });
+
     }
-    @Test
-    public void badAB(){
-        assertThrows(CashTerminal.CASH_TERMINAL_OVERLOADED.getClass(), () -> {
-            new CashTerminal(21, 21);
-        });
+    @Test(expected = CashTerminalException.class)
+    public void badAB()  throws CashTerminalException{
+        terminal =  new CashTerminal(21, 21);
     }
     @Test
     public void normalCredentials() throws CredentialsException, CashTerminalException {
@@ -40,55 +37,63 @@ public class CashTerminalTest {
         assertTrue(terminal.putMoney(15, 15));
         assertTrue(terminal.getMoney(1234, 1234, 1300));
     }
-    @Test
-    public void badCard() throws CashTerminalException {
+    @Test(expected = CredentialsException.class)
+    public void badCard() throws CashTerminalException, CredentialsException {
         terminal = new CashTerminal();
         assertTrue(terminal.putMoney(15, 15));
-        assertThrows(CashTerminal.CARD_OR_PASSCODE_IS_NULL.getClass(),()->{terminal.getMoney(null, 1234, 1300);});
+        terminal.getMoney(null, 1234, 1300);
     }
-    @Test
-    public void badPassCode() throws CashTerminalException {
+    @Test( expected = CredentialsException.class)
+    public void badPassCode() throws CashTerminalException, CredentialsException {
         terminal = new CashTerminal();
         assertTrue(terminal.putMoney(15, 15));
-        assertThrows(CashTerminal.CARD_OR_PASSCODE_IS_NULL.getClass(),()->{terminal.getMoney(1234, null, 1300);});
+        terminal.getMoney(1234, null, 1300);
     }
-    @Test
-    public void badCredentials() throws CashTerminalException {
+    @Test(expected = CredentialsException.class)
+    public void badCredentials() throws CashTerminalException, CredentialsException {
         terminal = new CashTerminal();
         assertTrue(terminal.putMoney(15, 15));
-        assertThrows(CashTerminal.CARD_OR_PASSCODE_IS_NULL.getClass(),()->{terminal.getMoney(null, null, 1300);});
+        terminal.getMoney(null, null, 1300);
     }
-    @Test
-    public void badPassCodeLength() throws CashTerminalException {
+    @Test( expected = CredentialsException.class)
+    public void badPassCodeLength() throws CashTerminalException, CredentialsException {
         terminal = new CashTerminal();
         assertTrue(terminal.putMoney(15, 15));
-        assertThrows(CashTerminal.PASSCODE_IS_WRONG_LENGTH.getClass(),()->{terminal.getMoney(1234, 123, 1300);});
+
+
+            terminal.getMoney(1234, 123, 1300);
     }
-    @Test
-    public void badAmount1301() throws CashTerminalException {
+    @Test(  expected = CredentialsException.class)
+    public void badAmount1301() throws CashTerminalException, CredentialsException {
         terminal = new CashTerminal();
         assertTrue(terminal.putMoney(15, 15));
-        assertThrows(CashTerminal.AMOUNT_IS_NOT_DIVISIBLE_BY.getClass(),()->{terminal.getMoney(1234, 1234, 1301);});
+     terminal.getMoney(1234, 1234, 1301);
     }
-    @Test
-    public void badAmountMinus1301() throws CashTerminalException {
+
+    @Test(  expected = CashTerminalException.class)
+    public void badAmountMinus1300() throws CashTerminalException, CredentialsException {
         terminal = new CashTerminal();
         assertTrue(terminal.putMoney(15, 15));
-        assertThrows(CashTerminal.REQUESTED_MONEY_AMOUNT_TOO_SMALL.getClass(),()->{terminal.getMoney(1234, 1234, -1301);});
+
+            terminal.getMoney(1234, 1234, -1300);
+
     }
-    @Test
-    public void badAmountZero() throws CashTerminalException {
+    @Test(  expected = CashTerminalException.class)
+    public void badAmountZero() throws CashTerminalException, CredentialsException {
         terminal = new CashTerminal();
         assertTrue(terminal.putMoney(15, 15));
-        assertThrows(CashTerminal.REQUESTED_MONEY_AMOUNT_TOO_SMALL.getClass(),()->{terminal.getMoney(1234, 1234, 0);});
+
+            terminal.getMoney(1234, 1234, 0);
+
     }
 
 
-    @Test
-    public void tooBigAmount() throws CashTerminalException {
+    @Test(  expected = CashTerminalException.class)
+    public void tooBigAmount() throws CashTerminalException, CredentialsException {
         terminal = new CashTerminal();
         assertTrue(terminal.putMoney(1, 1));
-        assertThrows(CashTerminal.NOT_ENOUGH_MONEY_IN_CASH_TERMINAL.getClass(),()->{terminal.getMoney(1234, 1234, 400);});
+        terminal.getMoney(1234, 1234, 400);
+
     }
     @Test
     public void normalAmount() throws CashTerminalException, CredentialsException {
